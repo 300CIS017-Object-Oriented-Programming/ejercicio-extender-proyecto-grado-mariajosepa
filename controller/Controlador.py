@@ -28,10 +28,11 @@ class Controlador:
                  Criterio("Desafío académico y científico del tema", 0.15),
                  Criterio("Cumplimiento de los objetivos propuestos", 0.1),
                  Criterio("Creatividad e innovación de las soluciones y desarrollos propuestos", 0.1),
-                 Criterio("Validez de los resultados y conclusiones", 0.2),
+                 Criterio("Validez de los resultados y conclusiones", 0.15),
                  Criterio("Manejo y procesamiento de la información y bibliografía", 0.1),
                  Criterio("Calidad y presentación del documento escrito", 0.075),
-                 Criterio("Presentación oral", 0.075)]
+                 Criterio("Presentación oral", 0.075),
+                Criterio("Dominio de la información", 0.05)]
 
     def mostrar_de_numero_a_palabras(self, numero):
         """
@@ -81,3 +82,9 @@ class Controlador:
         return palabra
 
 
+    def getDirectores(self):
+
+        directores = ["Luisa Fernanda Rincon","Juan Carlos Martinez","Maria Constanza Pabon","Gloria Inés Álvarez",
+                      "Gerardo M Sarria M","Luis Eduardo Tobón","Juan Pablo García","Frank Martinez","Carlos Ramirez"]
+
+        return directores
