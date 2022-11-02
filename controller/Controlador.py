@@ -13,6 +13,11 @@ class Controlador:
     def __init__(self) -> None:
         super().__init__()
         self.actas = []
+        self.num_proyectos_aplicados = 0;
+        self.num_proyectos_investigacion = 0;
+        self.num_proyectos_jurados_externos = 0;
+        self.num_proyectos_jurados_internos = 0;
+        self.num_proyectos_excelentes = 0;
 
         # Inicializa los criterios de evaluacion de bse
         self.__inicializar_criterios()

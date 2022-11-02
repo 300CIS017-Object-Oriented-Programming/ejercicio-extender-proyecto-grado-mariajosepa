@@ -28,8 +28,10 @@ def agregar_acta(st, controlador):
         info_acta_obj.codirector = st.text_input("Codirector", "N.A")
     with col7:
         info_acta_obj.jurado1 = st.text_input("Jurado #1")
+        info_acta_obj.jurado1_tipo = st.checkbox("Externo",key="check1")
     with col8:
         info_acta_obj.jurado2 = st.text_input("Jurado #2")
+        info_acta_obj.jurado2_tipo = st.checkbox("Externo", key="check2")
     with col9:
         info_acta_obj.fecha_presentacion = st.text_input("Fecha De Presentacion")
     enviado_btn = st.button("Enviar")
@@ -39,6 +41,17 @@ def agregar_acta(st, controlador):
             and info_acta_obj.jurado1 != "" and info_acta_obj.jurado2 != "":
         controlador.agregar_evaluacion(info_acta_obj)
         st.success("Acta Agregada Exitosamente.")
+
+        if info_acta_obj.tipo_trabajo == 'Aplicado':
+            controlador.num_proyectos_aplicados += 1
+        else:
+            controlador.num_proyectos_investigacion +=1
+        if info_acta_obj.jurado1_tipo == False or info_acta_obj.jurado2_tipo == False:
+            controlador.num_proyectos_jurados_externos += 1
+        if info_acta_obj.jurado1_tipo == True or info_acta_obj.jurado2_tipo == True:
+            controlador.num_proyectos_jurados_internos += 1
+
+
     elif enviado_btn:
         st.error("Llene Todos Los Campos Vacíos.")
     else:
@@ -82,9 +95,18 @@ def ver_historico_acta(st, controlador):
         with col7:
             st.write("**Jurado #1**")
             st.write(acta.jurado1)
+            if acta.jurado1_tipo == True:
+                st.write("Tipo: Externo")
+            else:
+                st.write("Tipo: Interno")
+
         with col8:
             st.write("**Jurado #2**")
             st.write(acta.jurado2)
+            if acta.jurado2_tipo == True:
+                st.write("Tipo: Externo")
+            else:
+                st.write("Tipo: Interno")
         with col9:
             st.write("**Fecha De Presentacion**")
             st.write(acta.fecha_presentacion)
@@ -121,10 +143,14 @@ def evaluar_criterios(st, controlador):
                 nota_jurado2 = st.number_input(str(num) + ". Nota Jurado 2", 0.0, 5.0)
                 criterio.nota = ((nota_jurado1 + nota_jurado2) / 2) * criterio.porcentaje
                 criterio.observacion = st.text_input(str(num) + ". Observación", "Sin Comentarios.")
+                criterio.observacion_extra = st.text_input(str(num) + ". Observación adicional", "Sin Comentarios.")
+                criterio.restriccion = st.text_input(str(num) + ". Restricciones", "Sin Comentarios.")
                 temp += criterio.nota
                 num += 1
             if temp > 3.5:
                 st.write("#### Nota Final", temp, "Acta Aprobada.")
+                if temp > 4.8:
+                    controlador.num_proyectos_excelentes += 1
             else:
                 st.write("#### Nota Final", temp, "Acta Reprobada.")
 
@@ -166,3 +192,13 @@ def exportar_acta(st, controlador):
 
     if len(controlador.actas) == 0:
         st.warning("No Hay Ningún Estudiante Calificado Actualmente.")
+
+
+def mostrar_estadisticas(st, controlador):
+    st.title("Estádisticas generales")
+
+    st.metric("Proyectos Aplicados",value=controlador.num_proyectos_aplicados)
+    st.metric("Proyectos de Investigación", value=controlador.num_proyectos_investigacion)
+    st.metric("Proyectos con Jurados Externos", value=controlador.num_proyectos_jurados_externos)
+    st.metric("Proyectos con Jurados Internos", value=controlador.num_proyectos_aplicados)
+    st.metric("Proyectos Superiores a 4.8", value=controlador.num_proyectos_excelentes)
